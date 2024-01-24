@@ -1,0 +1,186 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.CommodityClothingDao">
+
+    <resultMap id="cloth" type="com.ka.store.pojo.commodity.clothing.CommodityClothing">
+        <id column="id" property="id"/>
+        <result property="commodity_id" column="commodity_id"/>
+        <result property="commodity_name" column="commodity_name"/>
+        <result property="market_time" column="market_time"/>
+        <result property="brand" column="brand"/>
+        <result property="price" column="price"/>
+        <result property="cloth_type" column="cloth_type"/>
+        <result property="apply_to_session" column="apply_to_session"/>
+        <result property="commodity_weight" column="commodity_weight"/>
+        <result property="suitable" column="suitable"/>
+        <result property="clothing_style" column="clothing_style"/>
+        <association property="commodity" javaType="com.ka.store.pojo.commodity.Commodity">
+            <id property="id" column="id"/>
+            <result column="commodity_id" property="commodity_id"/>
+            <result column="name" property="name"/>
+            <result column="merchant_id" property="merchant_id"/>
+            <result column="price" property="price"/>
+            <result column="category" property="category"/>
+            <result column="main_img" property="main_img"/>
+            <result column="introduce" property="introduce"/>
+            <association property="sales_commodity" javaType="com.ka.store.pojo.sale.Sales_commodity">
+                <id column="id" property="id"/>
+                <result column="commodity_id" property="commodity_id"/>
+                <result column="sales_num" property="sales_num"/>
+                <result column="ave_grade" property="ave_grade"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="selectAllCloth" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+    </select>
+
+    <insert id="insetCloth" parameterType="com.ka.store.pojo.commodity.clothing.CommodityClothing">
+        insert into commodity_clothing(commodity_id,commodity_name,market_time,brand,price,cloth_type,apply_to_session,commodity_weight,suitable,clothing_style)
+            values(#{commodity_id},#{commodity_name},#{market_time},#{brand},#{price},#{cloth_type},#{apply_to_session},#{commodity_weight},#{suitable},#{clothing_style})
+    </insert>
+
+    <select id="selectClothById" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl left join commodity c on cl.commodity_id=c.commodity_id where c.commodity_id=#{commodity_id}
+    </select>
+
+    <update id="updateClothById" parameterType="com.ka.store.pojo.commodity.clothing.CommodityClothing">
+        update commodity_clothing
+            <set>
+                <if test="commodity_name!=null and commodity_name!=''">commodity_name=#{commodity_name}</if>
+                <if test="market_time!=null and market_time!=''">,market_time=#{market_time}</if>
+                <if test="brand!=null and brand!=''">,brand=#{brand}</if>
+                <if test="price!=null and price!=''">,price=#{price}</if>
+                <if test="cloth_type!=null and cloth_type!=''">,cloth_type=#{cloth_type}</if>
+                <if test="apply_to_session!=null and apply_to_session!=''">,apply_to_session=#{apply_to_session}</if>
+                <if test="commodity_weight!=null and commodity_weight!=''">,commodity_weight=#{commodity_weight}</if>
+                <if test="suitable!=null and suitable!=''">,suitable=#{suitable}</if>
+                <if test="clothing_style!=null and clothing_style!=''">,clothing_style=#{clothing_style}</if>
+            </set>
+            where commodity_id=#{commodity_id}
+    </update>
+
+    <delete id="deleteClothById" parameterType="String">
+        delete from commodity_clothing where commodity_id=#{commodity_id}
+    </delete>
+
+    <select id="selectClothByKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+    </select>
+    <select id="selectClothOrderPrice" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            order by cl.price desc
+    </select>
+    <select id="selectClothOrderPriceUp" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            order by cl.price
+    </select>
+    <select id="selectByClothOrderBySaleNumUp" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            order by sc.sales_num desc
+    </select>
+    <select id="selectByClothOrderBySaleNumDown" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            order by sc.sales_num
+    </select>
+    <select id="selectByClothOrderByScoreDown" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            order by sc.ave_grade+0 desc
+    </select>
+    <select id="selectByClothOrderByScoreUp" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            order by sc.ave_grade+0
+    </select>
+
+
+    <select id="selectByClothOrderByPriceDownByKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+            order by cl.price desc
+    </select>
+    <select id="selectByClothOrderByPriceUpByKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+            order by cl.price
+    </select>
+
+    <select id="selectClothOrderBySaleNumDownAndKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+            order by sc.sales_num desc
+    </select>
+    <select id="selectClothOrderBySaleNumUpAndKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+            order by sc.sales_num
+    </select>
+
+    <select id="selectByClothOrderByScoreDownByKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+            order by sc.ave_grade+0 desc
+    </select>
+    <select id="selectByClothOrderByScoreUpByKeyword" parameterType="String" resultMap="cloth">
+        select * from commodity_clothing cl
+            left join commodity c on cl.commodity_id=c.commodity_id
+            left join sales_commodity sc on cl.commodity_id = sc.commodity_id
+            where cl.brand=#{keyword} or cl.cloth_type=#{keyword} or cl.apply_to_session=#{keyword}
+                or cl.suitable=#{keyword} or cl.clothing_style=#{keyword}
+            order by sc.ave_grade+0
+    </select>
+
+    <select id="selectClothBrand" resultType="String">
+        select distinct brand from commodity_clothing
+    </select>
+
+    <select id="selectClothSuitable" resultType="String">
+        select distinct suitable from commodity_clothing
+    </select>
+
+    <select id="selectClothStyle" resultType="String">
+        select distinct cloth_type from commodity_clothing
+    </select>
+
+    <select id="selectClothType" resultType="String">
+        select distinct clothing_style from commodity_clothing
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Security_questionDao">
+
+    <select id="selectAllQuestion" resultType="com.ka.store.pojo.user.Security_question">
+        select * from security_question
+    </select>
+
+    <insert id="insertQuestion" parameterType="com.ka.store.pojo.user.Security_question">
+        insert into security_question(que_id,question) values (#{que_id},#{question})
+    </insert>
+
+    <delete id="deleteQuestion" parameterType="String">
+        delete from security_question where que_id=#{que_id}
+    </delete>
+
+    <update id="updateQuestion" parameterType="com.ka.store.pojo.user.Security_question">
+        update security_question
+            <set>
+                <if test="question!=null and question!=''">question=#{question}</if>
+            </set>
+        where que_id=#{que_id}
+    </update>
+
+</mapper>

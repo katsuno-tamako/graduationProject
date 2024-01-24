@@ -1,0 +1,12 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.User_commodity_evaluateDao">
+
+    <insert id="insertUCInfo" parameterType="com.ka.store.pojo.comment.User_commodity_evaluate">
+        insert into user_commodity_evaluate(commodity_id.user_id)
+            values (#{commodity_id},#{user_id})
+    </insert>
+
+</mapper>

@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Merchant_loDao">
+    
+    <select id="merchantLogin" resultType="com.ka.store.pojo.merchant.Merchant_lo">
+        select * from merchant_lo where account=#{account} and password=#{password}
+    </select>
+
+    <insert id="insertMerchantLo" parameterType="com.ka.store.pojo.merchant.Merchant_lo">
+        insert into merchant_lo(account,password,merchantID)
+            values(#{account},#{password},#{merchantID})
+    </insert>
+
+</mapper>

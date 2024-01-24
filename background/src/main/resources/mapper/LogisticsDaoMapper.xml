@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.LogisticsDao">
+
+    <select id="selectAllLogistics" resultType="com.ka.store.pojo.logistics.Logistics">
+        select * from logistics order by lid desc
+    </select>
+
+    <insert id="insertLogistics" parameterType="com.ka.store.pojo.logistics.Logistics">
+        insert into logistics(logistics_id,logistics_company,logistics_status,logistics_date,dispatch,receive,receive_people,dispatch_people)
+            values (#{logistics_id},#{logistics_company},#{logistics_status},#{logistics_date},#{dispatch},#{receive},#{receive_people},#{dispatch_people})
+    </insert>
+
+    <update id="updateLogisticsStatus" parameterType="com.ka.store.pojo.logistics.Logistics">
+        update logistics
+            <set>
+                <if test="logistics_status!=null and logistics_status!=''">logistics_status=#{logistics_status}</if>
+            </set>
+            where logistics_id=#{logistics_id}
+    </update>
+
+</mapper>

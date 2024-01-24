@@ -1,0 +1,13 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.Page_ViewDao">
+    <select id="getPageView" resultType="int">
+        select page_view from page_view where id=1
+    </select>
+
+    <update id="addPageView">
+        update page_view set page_view = page_view+1 where id=1
+    </update>
+</mapper>

@@ -1,0 +1,143 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.Merchant_orderDao">
+
+    <resultMap id="merMap" type="com.ka.store.pojo.order.Merchant_order">
+        <id column="MOId" property="MOId"/>
+        <result property="order_id" column="order_id"/>
+        <result property="merchant_id" column="merchant_id"/>
+        <result property="order_status" column="order_status"/>
+        <result property="logistics" column="logistics"/>
+        <result property="order_date" column="order_date"/>
+        <result property="user_address_id" column="user_address_id"/>
+        <association property="user_address" javaType="com.ka.store.pojo.user.User_address">
+            <id property="id" column="id"/>
+            <result column="user_id" property="user_id"/>
+            <result column="address" property="address"/>
+            <result column="user_name" property="user_name"/>
+            <result column="tag" property="tag"/>
+            <result column="phone" property="phone"/>
+            <result column="user_address_id" property="user_address_id"/>
+        </association>
+        <collection property="order_tables" ofType="com.ka.store.pojo.order.Order_table" column="order_id">
+            <id column="id" property="id"/>
+            <result column="order_id" property="order_id"/>
+            <result column="user_id" property="user_id"/>
+            <result column="commodity_id" property="commodity_id"/>
+            <result column="logistics_id" property="logistics_id"/>
+            <result column="user_address_id" property="user_address_id"/>
+            <result column="num" property="num"/>
+            <result column="status" property="status"/>
+            <association property="commodity" javaType="com.ka.store.pojo.commodity.Commodity">
+                <id property="id" column="id"/>
+                <result column="commodity_id" property="commodity_id"/>
+                <result column="name" property="name"/>
+                <result column="merchant_id" property="merchant_id"/>
+                <result column="price" property="price"/>
+                <result column="category" property="category"/>
+                <result column="main_img" property="main_img"/>
+                <result column="introduce" property="introduce"/>
+
+            </association>
+            <association property="user" javaType="com.ka.store.pojo.user.User_info">
+                <id property="id" column="id"/>
+                <result column="user_id" property="user_id"/>
+                <result column="phone" property="phone"/>
+                <result column="email" property="email"/>
+                <result column="birthday" property="birthday"/>
+                <result column="sex" property="sex"/>
+                <result column="img" property="img"/>
+                <result column="user_name" property="user_name"/>
+            </association>
+            <association property="logistics" javaType="com.ka.store.pojo.logistics.Logistics">
+                <id column="id" property="id"/>
+                <result property="logistics_id" column="logistics_id"/>
+                <result property="logistics_company" column="logistics_company"/>
+                <result property="logistics_status" column="logistics_status"/>
+                <result property="logistics_date" column="logistics_date"/>
+                <result property="dispatch" column="dispatch"/>
+                <result property="receive" column="receive"/>
+                <result property="receive_people" column="receive_people"/>
+                <result property="dispatch_people" column="dispatch_people"/>
+            </association>
+            <association property="user_address" javaType="com.ka.store.pojo.user.User_address">
+                <id property="id" column="id"/>
+                <result column="user_id" property="user_id"/>
+                <result column="address" property="address"/>
+                <result column="user_name" property="user_name"/>
+                <result column="tag" property="tag"/>
+                <result column="phone" property="phone"/>
+                <result column="user_address_id" property="user_address_id"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllOrderByAllMerchant" resultMap="merMap">
+        select * from merchant_order as mo,order_table as ot where mo.order_id=ot.order_id
+    </select>
+
+    <insert id="insertOrder_MerchantTable" parameterType="com.ka.store.pojo.order.Merchant_order">
+        insert into merchant_order(order_id,merchant_id,order_status,order_date,user_address_id)
+            values (#{order_id},#{merchant_id},#{order_status},#{order_date},#{user_address_id})
+    </insert>
+
+    <select id="selectOrderMerchantTableByMerchantId" resultMap="merMap" parameterType="String">
+        select * from merchant_order mo,order_table ot,commodity c,user_info ui,user_address ua
+            where
+            mo.order_id=ot.order_id and
+            ot.commodity_id=c.commodity_id and
+            ot.user_id = ui.user_id and
+            ot.user_address_id = ua.user_address_id and
+            mo.merchant_id=#{merchant_id}
+            order by mo.order_id desc
+    </select>
+
+    <update id="updateMerchantTableStatus" parameterType="com.ka.store.pojo.order.Merchant_order">
+        update merchant_order
+            <set>
+                <if test="order_status!=null and order_status!=''">order_status=#{order_status}</if>
+                <if test="logistics_id!=null and logistics_id!=''">,logistics_id=#{logistics_id}</if>
+            </set>
+            where
+            order_id=#{order_id}
+    </update>
+
+    <update id="updateLogisticsStatus" parameterType="com.ka.store.pojo.order.Merchant_order">
+        update merchant_order
+            <set>
+                <if test="order_status!=null and order_status!=''">order_status=#{order_status}</if>
+            </set>
+            where logistics_id=#{logistics_id}
+    </update>
+
+
+    <select id="selectOrderByUser" resultMap="merMap" parameterType="String">
+          select * from merchant_order mo,order_table ot,commodity c,user_info ui,user_address ua
+            where
+            mo.order_id=ot.order_id and
+            ot.commodity_id=c.commodity_id and
+            ot.user_id = ui.user_id and
+            ot.user_address_id = ua.user_address_id and
+            ot.user_id=#{user_id}
+            order by mo.MOId desc
+    </select>
+
+    <select id="selectOrderById" resultMap="merMap" parameterType="com.ka.store.pojo.order.Merchant_order">
+          select * from merchant_order mo,order_table ot,commodity c,user_info ui,user_address ua
+            where
+            mo.order_id=ot.order_id and
+            ot.commodity_id=c.commodity_id and
+            ot.user_id = ui.user_id and
+            ot.user_address_id = ua.user_address_id and
+            mo.order_id = #{order_id} and
+            mo.merchant_id=#{merchant_id}
+    </select>
+    
+    <select id="getOrderNumber" resultType="int">
+        select count(*) from merchant_order
+    </select>
+
+
+</mapper>

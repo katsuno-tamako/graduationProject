@@ -1,0 +1,38 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Merchant_InfoDao">
+    <select id="selectMerchantByMerchantID" resultType="com.ka.store.pojo.merchant.Merchant_Info" parameterType="String">
+        select * from merchant_info where merchant_id=#{merchant_id}
+    </select>
+
+    <select id="selectAllMerchant" resultType="com.ka.store.pojo.merchant.Merchant_Info">
+        select * from merchant_info
+    </select>
+
+    <insert id="insertMerchant_info" parameterType="com.ka.store.pojo.merchant.Merchant_Info">
+        insert merchant_info(merchant_id,merchant_email,merchant_name,mer_intro)
+            values (#{merchant_id},#{merchant_email},#{merchant_name},#{mer_intro})
+    </insert>
+
+    <update id="updateMerInfo" parameterType="com.ka.store.pojo.merchant.Merchant_Info">
+        update merchant_info
+            <set>
+                <if test="merchant_name!=null and merchant_name!=''">merchant_name=#{merchant_name}</if>
+                <if test="merchant_address!=null and merchant_address!=''">,merchant_address=#{merchant_address}</if>
+                <if test="merchant_number!=null and merchant_number!=''">,merchant_number=#{merchant_number}</if>
+                <if test="merchant_email!=null and merchant_email!=''">,merchant_email=#{merchant_email}</if>
+                <if test="mer_intro!=null and mer_intro!=''">,mer_intro=#{mer_intro}</if>
+            </set>
+            where merchant_id=#{merchant_id}
+    </update>
+
+    <update id="upHeadImg" parameterType="com.ka.store.pojo.merchant.Merchant_Info">
+        update merchant_info
+            <set>
+                <if test="img!=null and img!=''">img=#{img}</if>
+            </set>
+            where merchant_id=#{merchant_id}
+    </update>
+
+</mapper>

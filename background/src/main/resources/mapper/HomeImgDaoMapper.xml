@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.HomeImgDao">
+    <insert id="insertHomeImg" parameterType="com.ka.store.pojo.admin.HomeImg">
+        insert into homeImg(img) values(#{img})
+    </insert>
+
+    <select id="selectAllImg" resultType="com.ka.store.pojo.admin.HomeImg">
+        select * from homeImg
+    </select>
+
+    <delete id="deleteHomeImg" parameterType="String">
+        delete from homeImg where img=#{img}
+    </delete>
+
+</mapper>

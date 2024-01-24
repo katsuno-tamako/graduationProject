@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Category_typeDao">
+
+    <select id="selectAllCategoryType" resultType="com.ka.store.pojo.commodity.Category.CategoryType">
+        select * from category_type
+    </select>
+
+    <insert id="insertCategoryType" parameterType="com.ka.store.pojo.commodity.Category.CategoryType">
+        insert into category_type(category,category_type) values (#{category},#{category_type})
+    </insert>
+
+    <delete id="deleteCategoryType" parameterType="com.ka.store.pojo.commodity.Category.CategoryType">
+        delete from category_type where category=#{category} and category_type=#{category_type}
+    </delete>
+
+    <select id="selectCategoryTypeTableByCategory" parameterType="String" resultType="com.ka.store.pojo.commodity.Category.CategoryType">
+        select * from category_type where category=#{category}
+    </select>
+
+</mapper>

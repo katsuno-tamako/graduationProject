@@ -1,0 +1,14 @@
+server:
+  port: 8906
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/graduation_project?characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: tiao
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.ka.store.dao
+

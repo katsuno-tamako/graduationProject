@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.OtherDao">
+
+    <resultMap id="other" type="com.ka.store.pojo.commodity.other.Other">
+        <id column="id" property="id"/>
+        <result property="commodity_name" column="commodity_name"/>
+        <result property="commodity_id" column="commodity_id"/>
+        <result property="commodity_type" column="commodity_type"/>
+        <result property="commodity_intro" column="commodity_intro"/>
+        <result property="price" column="price"/>
+        <association property="commodity" javaType="com.ka.store.pojo.commodity.Commodity">
+            <id property="id" column="id"/>
+            <result column="commodity_id" property="commodity_id"/>
+            <result column="name" property="name"/>
+            <result column="merchant_id" property="merchant_id"/>
+            <result column="price" property="price"/>
+            <result column="category" property="category"/>
+            <result column="main_img" property="main_img"/>
+            <result column="introduce" property="introduce"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertOtherCommodity" parameterType="com.ka.store.pojo.commodity.other.Other">
+        insert into commodity_other(commodity_name,commodity_id,commodity_type,commodity_intro,price)
+            values (#{commodity_name},#{commodity_id},#{commodity_type},#{commodity_intro},#{price})
+    </insert>
+
+    <select id="selectAllOtherCommodity" resultMap="other">
+        select * from commodity_other o left join commodity c on o.commodity_id = c.commodity_id
+    </select>
+
+    <select id="selectOtherCommodityById" resultMap="other" parameterType="String">
+        select * from commodity_other o left join commodity c on o.commodity_id = c.commodity_id where o.commodity_id=#{commodity_id}
+    </select>
+
+    <update id="updateOtherCommodity" parameterType="com.ka.store.pojo.commodity.other.Other">
+        update commodity_other
+            <set>
+                <if test="commodity_name!=null and commodity_name!=''">commodity_name=#{commodity_name}</if>
+                <if test="commodity_id!=null and commodity_id!=''">,commodity_id=#{commodity_id}</if>
+                <if test="commodity_type!=null and commodity_type!=''">,commodity_type=#{commodity_type}</if>
+                <if test="commodity_intro!=null and commodity_intro!=''">,commodity_intro=#{commodity_intro}</if>
+                <if test="price!=null and price!=''">,price=#{price}</if>
+            </set>
+            where commodity_id=#{commodity_id}
+    </update>
+
+    <delete id="deleteOtherCommodityById" parameterType="String">
+        delete from commodity_other where commodity_id=#{commodity_id}
+    </delete>
+
+</mapper>

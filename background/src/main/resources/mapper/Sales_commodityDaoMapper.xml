@@ -1,0 +1,32 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Sales_commodityDao">
+
+    <select id="selectSalesCommodity" resultType="com.ka.store.pojo.sale.Sales_commodity">
+        select * from sales_commodity
+    </select>
+
+    <insert id="insertCommoditySalesInfo" parameterType="com.ka.store.pojo.sale.Sales_commodity">
+        insert into  sales_commodity(commodity_id,sales_num,ave_grade)
+            values (#{commodity_id},#{sales_num},#{ave_grade});
+    </insert>
+
+    <update id="increaseSalesNum" parameterType="com.ka.store.pojo.sale.Sales_commodity">
+        update sales_commodity set sales_num=sales_num+#{sales_num} where commodity_id=#{commodity_id}
+    </update>
+
+    <update id="updateAveScore" parameterType="com.ka.store.pojo.sale.Sales_commodity">
+        update sales_commodity set ave_grade=(ave_grade+#{ave_grade})/2 where commodity_id=#{commodity_id}
+    </update>
+
+    <select id="selectAveByCommodityId" resultType="String" parameterType="com.ka.store.pojo.sale.Sales_commodity">
+        select ave_grade from sales_commodity where commodity_id=#{commodity_id}
+    </select>
+
+    <update id="insertAveScore" parameterType="com.ka.store.pojo.sale.Sales_commodity">
+        update sales_commodity set ave_grade=#{ave_grade} where commodity_id=#{commodity_id}
+    </update>
+
+
+</mapper>

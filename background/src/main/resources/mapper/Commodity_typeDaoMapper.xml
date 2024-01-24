@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Commodity_typeDao">
+
+    <select id="selectAllCommodityType" resultType="com.ka.store.pojo.commodity.type.CommodityType.Commodity_type">
+        select * from commodity_type
+    </select>
+
+    <insert id="insertCommodityType" parameterType="com.ka.store.pojo.commodity.type.CommodityType.Commodity_type">
+        insert into commodity_type(commodity_id,commodity_type) values (#{commodity_id},#{commodity_type})
+    </insert>
+
+    <delete id="deleteCommodityId" parameterType="com.ka.store.pojo.commodity.type.CommodityType.Commodity_type">
+        delete from commodity_type where commodity_type=#{commodity_type} and commodity_id=#{commodity_id}
+    </delete>
+
+</mapper>

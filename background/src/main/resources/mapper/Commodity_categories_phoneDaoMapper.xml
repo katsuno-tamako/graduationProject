@@ -1,0 +1,42 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Commodity_categories_phoneDao">
+
+    <resultMap id="commodityPhone" type="com.ka.store.pojo.commodity.allCategory.Commodity_categories_phone">
+        <id property="id" column="id"/>
+        <result property="phone_name" column="phone_name"/>
+        <result property="commodity_id" column=""/>
+        <result property="phone_cpu" column="phone_cpu"/>
+        <result property="phone_price" column="phone_price"/>
+        <result property="phone_memory" column="phone_memory"/>
+        <result property="phone_system" column="phone_system"/>
+        <result property="phone_storage" column="phone_storage"/>
+        <result property="phone_brand" column="phone_brand"/>
+        <result property="phone_length" column="phone_length"/>
+        <result property="phone_weight" column="phone_weight"/>
+        <result property="main_pixel" column="main_pixel"/>
+        <result property="phone_resolution" column="phone_resolution"/>
+        <association property="commodity" javaType="com.ka.store.pojo.commodity.Commodity">
+            <id property="id" column="id"/>
+            <result column="commodity_id" property="commodity_id"/>
+            <result column="name" property="name"/>
+            <result column="merchant_id" property="merchant_id"/>
+            <result column="price" property="price"/>
+            <result column="category" property="category"/>
+            <result column="main_img" property="main_img"/>
+            <result column="introduce" property="introduce"/>
+
+        </association>
+    </resultMap>
+
+    <insert id="insertPhone" parameterType="com.ka.store.pojo.commodity.allCategory.Commodity_categories_phone">
+        insert into commodity_categories_phone(phone_name,commodity_id,phone_cpu,phone_price,phone_memory,phone_system,phone_storage,phone_brand,phone_length,phone_weight,main_pixel,phone_resolution)
+            values (#{phone_name},#{commodity_id},#{phone_cpu},#{phone_price},#{phone_memory},#{phone_system},#{phone_storage},#{phone_brand},#{phone_length},#{phone_weight},#{main_pixel},#{phone_resolution})
+    </insert>
+
+    <select id="selectPhoneById" resultMap="commodityPhone" parameterType="String">
+        select * from commodity_categories_phone phone left join commodity c on phone.commodity_id = c.commodity_id
+    </select>
+
+</mapper>

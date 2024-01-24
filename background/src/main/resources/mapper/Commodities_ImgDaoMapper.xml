@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Commodities_ImgDao">
+
+    <insert id="insertCommodityImg" parameterType="com.ka.store.pojo.commodity.CommodityImg">
+        insert into commodities_img(commodity_id,path) values (#{commodity_id},#{path})
+    </insert>
+
+    <select id="selectImgByCommodityId" parameterType="String" resultType="com.ka.store.pojo.commodity.CommodityImg">
+        select * from commodities_img where commodity_id=#{commodity_id}
+    </select>
+
+    <delete id="deleteAllImg" parameterType="String">
+        delete from commodities_img where commodity_id=#{commodity_id}
+    </delete>
+
+    <delete id="deleteImgByPath" parameterType="String">
+        delete from commodities_img where path=#{url}
+    </delete>
+
+</mapper>

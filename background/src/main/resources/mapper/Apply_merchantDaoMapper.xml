@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.Apply_merchantDao">
+
+    <insert id="insertApplyMerchant" parameterType="com.ka.store.pojo.merchant.Apply_merchant">
+        insert into apply_merchant(apply_id,merchant_name,apply_info,merchant_id,apply_date,merchant_email,status,account,password)
+            values (#{apply_id},#{merchant_name},#{apply_info},#{merchant_id},#{apply_date},#{merchant_email},#{status},#{account},#{password})
+    </insert>
+
+    <select id="selectAllApplyMerchant" resultType="com.ka.store.pojo.merchant.Apply_merchant">
+        select * from apply_merchant order by id desc
+    </select>
+
+    <update id="updateApplyStatus" parameterType="com.ka.store.pojo.merchant.Apply_merchant">
+        update apply_merchant
+            <set>
+                <if test="status!=null and status!=''">
+                    status=#{status}
+                </if>
+            </set>
+            where merchant_id=#{merchant_id}
+    </update>
+
+</mapper>

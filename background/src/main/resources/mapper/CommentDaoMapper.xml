@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.CommentDao">
+
+    <resultMap id="comment" type="com.ka.store.pojo.comment.Comment">
+        <id column="id" property="id"/>
+        <result column="comment_id" property="comment_id"/>
+        <result column="commodity_id" property="commodity_id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="comment_date" property="comment_date"/>
+        <result column="content" property="content"/>
+        <result column="grade" property="grade"/>
+        <result column="likeNum" property="likeNum"/>
+        <association property="user_info" javaType="com.ka.store.pojo.user.User_info">
+            <id property="id" column="id"/>
+            <result column="user_id" property="user_id"/>
+            <result column="phone" property="phone"/>
+            <result column="email" property="email"/>
+            <result column="birthday" property="birthday"/>
+            <result column="sex" property="sex"/>
+            <result column="img" property="img"/>
+            <result column="user_name" property="user_name"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertComment" parameterType="com.ka.store.pojo.comment.Comment">
+        insert into comment(comment_id,commodity_id,user_id,comment_date,content,grade,user_name,likeNum)
+            values(#{comment_id},#{commodity_id},#{user_id},#{comment_date},#{content},#{grade},#{user_name},#{likeNum})
+    </insert>
+
+    <select id="selectCommentByCommodityId" parameterType="String" resultMap="comment">
+        select * from comment left join user_info on comment.user_id=user_info.user_id where comment.commodity_id=#{commodity_id}
+    </select>
+
+    <select id="eqCom" parameterType="String" resultMap="comment">
+        select * from comment left join user_info on comment.user_id=user_info.user_id
+        where comment.commodity_id=#{commodity_id} and comment.user_id=#{user_id}
+    </select>
+
+
+
+</mapper>

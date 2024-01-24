@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ka.store.dao.User_security_questionDao">
+
+    <resultMap id="que" type="com.ka.store.pojo.user.User_security_question">
+        <id column="id" property="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="que_id" column="que_id"/>
+        <result property="ans" column="ans"/>
+        <association property="security_question" javaType="com.ka.store.pojo.user.Security_question">
+            <id column="id" property="id"/>
+            <result property="que_id" column="que_id"/>
+            <result property="question" column="question"/>
+        </association>
+    </resultMap>
+
+    <select id="selectQuestionByUser" resultMap="que" parameterType="com.ka.store.pojo.user.User_security_question">
+        select * from user_security_question u
+            left join security_question s on u.que_id = s.que_id
+            where u.user_id = #{user_id}
+    </select>
+
+
+    <insert id="insertQuesByUser" parameterType="com.ka.store.pojo.user.User_security_question">
+        insert into user_security_question(user_id,que_id,ans)
+            values (#{user_id},#{que_id},#{ans})
+    </insert>
+    <update id="updateQuestion" parameterType="com.ka.store.pojo.user.User_security_question">
+        update user_security_question
+            <set>
+                <if test="que_id!=null and que_id!=''">que_id=#{que_id}</if>
+                <if test="ans!=null and ans!=''">,ans=#{ans}</if>
+            </set>
+        where user_id=#{user_id} and id=#{id}
+    </update>
+    
+    <select id="selectQuestionByAccount" resultMap="que" parameterType="String">
+      select * from user_security_question u
+            left join security_question s on u.que_id = s.que_id
+            where u.user_id = #{user_id}
+    </select>
+
+    <select id="equSucQue" parameterType="com.ka.store.pojo.user.User_security_question" resultMap="que">
+        select * from user_security_question u
+            left join security_question s on u.que_id = s.que_id
+            where u.user_id = #{user_id} and u.que_id=#{que_id} and u.ans=#{ans}
+    </select>
+
+    <select id="haveAccountSelectQ" resultType="com.ka.store.pojo.user.User_security_question" parameterType="String">
+        select * from user_security_question where user_id=#{account}
+    </select>
+
+</mapper>

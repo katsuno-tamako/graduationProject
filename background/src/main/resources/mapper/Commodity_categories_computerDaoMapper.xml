@@ -1,0 +1,202 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.Commodity_categories_computerDao">
+    <resultMap id="commodityComputer" type="com.ka.store.pojo.commodity.allCategory.Commodity_categories_computer">
+        <id property="id" column="id"/>
+        <result property="commodity_id" column="commodity_id"/>
+        <result property="computer_name" column="computer_name"/>
+        <result property="computer_type" column="computer_type"/>
+        <result property="cpu" column="computer_cpu"/>
+        <result property="memory" column="computer_memory"/>
+        <result property="disk" column="computer_disk"/>
+        <result property="system" column="computer_system"/>
+        <result property="resolution" column="computer_resolution"/>
+        <result property="price" column="price"/>
+        <result property="brand" column="computer_brand"/>
+            <association property="commodity" javaType="com.ka.store.pojo.commodity.Commodity">
+                <id property="id" column="id"/>
+                <result column="commodity_id" property="commodity_id"/>
+                <result column="name" property="name"/>
+                <result column="merchant_id" property="merchant_id"/>
+                <result column="price" property="price"/>
+                <result column="category" property="category"/>
+                <result column="main_img" property="main_img"/>
+                <result column="introduce" property="introduce"/>
+                <association property="sales_commodity" javaType="com.ka.store.pojo.sale.Sales_commodity">
+                    <id column="id" property="id"/>
+                    <result column="commodity_id" property="commodity_id"/>
+                    <result column="sales_num" property="sales_num"/>
+                    <result column="ave_grade" property="ave_grade"/>
+                </association>
+            </association>
+    </resultMap>
+
+    <select id="selectAllComputer" resultMap="commodityComputer">
+        select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+    </select>
+
+    <insert id="insertComputer" parameterType="com.ka.store.pojo.commodity.allCategory.Commodity_categories_computer">
+        insert into commodity_categories_computer(commodity_id,computer_name,computer_type,computer_cpu,price,computer_memory,computer_disk,computer_system,computer_resolution,computer_brand)
+        values (#{commodity_id},#{computer_name},#{computer_type},#{cpu},#{price},#{memory},#{disk},#{system},#{resolution},#{brand})
+    </insert>
+
+    <select id="selectComputerById" resultMap="commodityComputer" parameterType="String">
+        select * from commodity_categories_computer computer left join commodity c on computer.commodity_id = c.commodity_id where computer.commodity_id=#{commodity_id}
+    </select>
+
+    <update id="updateComputerById" parameterType="com.ka.store.pojo.commodity.allCategory.Commodity_categories_computer">
+        update commodity_categories_computer
+            <set>
+                <if test="computer_name!=null and computer_name!=''">
+                    computer_name=#{computer_name}
+                </if>
+                <if test="computer_type!=null and computer_type!=''">
+                    ,computer_type=#{computer_type}
+                </if>
+                <if test="cpu!=null and cpu!=''">
+                    ,computer_cpu=#{cpu}
+                </if>
+                <if test="memory!=null and memory!=''">
+                    ,computer_memory=#{memory}
+                </if>
+                <if test="disk!=null and disk!=''">
+                    ,computer_disk=#{disk}
+                </if>
+                <if test="system!=null and system!=''">
+                    ,computer_system=#{system}
+                </if>
+                <if test="resolution!=null and resolution!=''">
+                    ,computer_resolution=#{resolution}
+                </if>
+                <if test="price!=null and price!=''">
+                    ,price=#{price}
+                </if>
+                <if test="brand!=null and brand!=''">
+                    ,computer_brand=#{brand}
+                </if>
+            </set>
+            where commodity_id=#{commodity_id}
+    </update>
+
+
+    <delete id="deleteComputerById" parameterType="String">
+        delete from commodity_categories_computer where commodity_id=#{commodity_id}
+    </delete>
+
+    <select id="selectComputerDisByType" resultType="String">
+        select distinct computer_type from commodity_categories_computer
+    </select>
+
+    <select id="selectComputerDisByCPU" resultType="String">
+        select distinct computer_cpu from commodity_categories_computer
+    </select>
+
+    <select id="selectComputerDisByBrand" resultType="String">
+        select distinct computer_brand from commodity_categories_computer
+    </select>
+
+
+
+
+    <select id="selectByComputerOrderPrice" resultMap="commodityComputer">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            order by computer.price desc
+    </select>
+
+    <select id="selectByComputerOrderPriceUp" resultMap="commodityComputer">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            order by computer.price
+    </select>
+    <select id="selectByComputerOrderBySaleNumUp" resultMap="commodityComputer">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            order by sc.sales_num desc
+    </select>
+
+    <select id="selectByComputerOrderBySaleNumDown" resultMap="commodityComputer">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            order by sc.sales_num
+    </select>
+
+    <select id="selectByComputerOrderByScoreDown" resultMap="commodityComputer">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            order by sc.ave_grade+0  desc
+    </select>
+
+    <select id="selectByComputerOrderByScoreUp" resultMap="commodityComputer">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            order by sc.ave_grade+0
+    </select>
+
+    <select id="selectByComputerKeyword" resultMap="commodityComputer" resultType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by computer.id desc
+    </select>
+    <select id="selectComputerOrderBySaleNumDownAndKeyword" resultMap="commodityComputer" parameterType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by sc.sales_num desc
+    </select>
+    <select id="selectComputerOrderBySaleNumUpAndKeyword" resultMap="commodityComputer" parameterType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by sc.sales_num
+    </select>
+    <select id="selectByComputerOrderByScoreDownByKeyword" resultMap="commodityComputer" parameterType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by  sc.ave_grade+0 desc
+    </select>
+    <select id="selectByComputerOrderByScoreUpByKeyword" resultMap="commodityComputer" parameterType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by  sc.ave_grade+0
+    </select>
+
+
+    <select id="selectByComputerOrderByPriceDownByKeyword" resultMap="commodityComputer" parameterType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by  computer.price desc
+    </select>
+    <select id="selectByComputerOrderByPriceUpByKeyword" resultMap="commodityComputer" parameterType="String">
+          select * from commodity_categories_computer computer
+            left join commodity c on computer.commodity_id = c.commodity_id
+            left join sales_commodity sc on sc.commodity_id = c.commodity_id
+            where computer.computer_type=#{keyword} or computer.computer_cpu=#{keyword} or computer.computer_brand=#{keyword}
+            order by  computer.price
+    </select>
+
+
+
+
+
+
+</mapper>

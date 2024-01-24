@@ -1,0 +1,165 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ka.store.dao.CommodityFoodDao">
+
+    <resultMap id="food" type="com.ka.store.pojo.commodity.food.Food">
+        <id column="id" property="id"/>
+        <result property="name" column="name"/>
+        <result property="commodity_id" column="commodity_id"/>
+        <result property="price" column="price"/>
+        <result property="food_type" column="food_type"/>
+        <result property="food_weight" column="food_weight"/>
+        <result property="origin" column="origin"/>
+        <result property="production_license_number" column="production_license_number"/>
+        <result property="product_standard_number" column="product_standard_number"/>
+        <result property="net_content" column="net_content"/>
+        <result property="ex" column="ex"/>
+        <association property="commodity" javaType="com.ka.store.pojo.commodity.Commodity">
+            <id property="id" column="id"/>
+            <result column="commodity_id" property="commodity_id"/>
+            <result column="name" property="name"/>
+            <result column="merchant_id" property="merchant_id"/>
+            <result column="price" property="price"/>
+            <result column="category" property="category"/>
+            <result column="main_img" property="main_img"/>
+            <result column="introduce" property="introduce"/>
+            <association property="sales_commodity" javaType="com.ka.store.pojo.sale.Sales_commodity">
+                <id column="id" property="id"/>
+                <result column="commodity_id" property="commodity_id"/>
+                <result column="sales_num" property="sales_num"/>
+                <result column="ave_grade" property="ave_grade"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="selectAllFood" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+    </select>
+
+    <select id="selectFoodById" resultMap="food" parameterType="String">
+        select * from commodity_food f left join  commodity c on f.commodity_id=c.commodity_id where f.commodity_id=#{commodity_id}
+    </select>
+
+    <insert id="insertFoodInfo" parameterType="com.ka.store.pojo.commodity.food.Food">
+        insert into commodity_food(name,commodity_id,price,food_type,food_weight,origin,production_license_number,product_standard_number,net_content,ex)
+            values (#{name},#{commodity_id},#{price},#{food_type},#{food_weight},#{origin},#{production_license_number},#{product_standard_number},#{net_content},#{ex})
+    </insert>
+
+    <update id="updateFoodInfo" parameterType="com.ka.store.pojo.commodity.food.Food">
+        update  commodity_food
+            <set>
+                <if test="name!=null and name!=''">name=#{name}</if>
+                <if test="price!=null and price!=''">,price=#{price}</if>
+                <if test="food_type!=null and food_type!=''">,food_type=#{food_type}</if>
+                <if test="food_weight!=null and food_weight">,food_weight=#{food_weight}</if>
+                <if test="origin!=null and origin!=''">,origin=#{origin}</if>
+                <if test="production_license_number!=null and production_license_number!=''">,production_license_number=#{production_license_number}</if>
+                <if test="product_standard_number!=null and product_standard_number">,product_standard_number=#{product_standard_number}</if>
+                <if test="net_content!=null and net_content!=''">,net_content=#{net_content}</if>
+                <if test="ex!=null and ex!=''">,ex=#{ex}</if>
+            </set>
+            where commodity_id=#{commodity_id}
+    </update>
+
+    <delete id="deleteFoodById" parameterType="String">
+        delete from commodity_food where commodity_id=#{commodity_id}
+    </delete>
+
+    <select id="selectFoodByKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            where f.food_type=#{keyword}
+    </select>
+
+    <select id="selectFoodOrderPrice" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            order by f.price desc
+    </select>
+    <select id="selectFoodOrderPriceUp" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            order by f.price
+    </select>
+    <select id="selectByFoodOrderBySaleNumUp" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            order by sc.sales_num desc
+    </select>
+    <select id="selectByFoodOrderBySaleNumDown" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            order by sc.sales_num
+    </select>
+    <select id="selectByFoodOrderByScoreDown" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            order by sc.ave_grade+0  desc
+    </select>
+    <select id="selectByFoodOrderByScoreUp" resultMap="food">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+            order by sc.ave_grade+0
+    </select>
+
+    <select id="selectByFoodOrderByPriceDownByKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+             where f.food_type=#{keyword}
+            order by f.price desc
+    </select>
+
+    <select id="selectByFoodOrderByPriceUpByKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+             where f.food_type=#{keyword}
+            order by f.price
+    </select>
+    <select id="selectFoodOrderBySaleNumDownAndKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+             where f.food_type=#{keyword}
+            order by sc.sales_num desc
+    </select>
+
+    <select id="selectFoodOrderBySaleNumUpAndKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+             where f.food_type=#{keyword}
+            order by sc.sales_num
+    </select>
+    <select id="selectByFoodOrderByScoreDownByKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+             where f.food_type=#{keyword}
+            order by sc.ave_grade+0 desc
+    </select>
+
+    <select id="selectByFoodOrderByScoreUpByKeyword" resultMap="food" parameterType="String">
+        select * from commodity_food f
+            left join commodity c on f.commodity_id=c.commodity_id
+            left join sales_commodity sc on f.commodity_id=sc.commodity_id
+             where f.food_type=#{keyword}
+            order by sc.ave_grade+0
+    </select>
+
+    <select id="selectFoodType" resultType="String">
+        select distinct food_type from commodity_food
+    </select>
+
+</mapper>

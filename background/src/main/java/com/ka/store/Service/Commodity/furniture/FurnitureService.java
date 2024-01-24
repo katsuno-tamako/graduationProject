@@ -1,0 +1,48 @@
+package com.ka.store.Service.Commodity.furniture;
+import java.util.List;
+import com.ka.store.pojo.commodity.furniture.CommodityFurniture;
+import org.springframework.stereotype.Service;
+
+@Service
+public interface FurnitureService {
+
+    public List<CommodityFurniture> selectAllFurniture();
+
+    public void insertFurniture(CommodityFurniture furniture);
+
+    public void updateFurnitureById(CommodityFurniture furniture);
+
+    public void deleteFurnitureById(String commodity_id);
+
+    public CommodityFurniture selectFurnitureById(String commodity_id);
+
+
+
+    public List<CommodityFurniture> selectFurnitureByKeyword(String keyword);
+
+    public List<CommodityFurniture> selectFurnitureOrderPrice();
+    public List<CommodityFurniture> selectFurnitureOrderPriceUp();
+
+    public List<CommodityFurniture> selectByFurnitureOrderBySaleNumUp();
+    public List<CommodityFurniture> selectByFurnitureOrderBySaleNumDown();
+
+    public List<CommodityFurniture> selectByFurnitureOrderByScoreDown();
+    public List<CommodityFurniture> selectByFurnitureOrderByScoreUp();
+
+    public List<CommodityFurniture> selectFurnitureOrderBySaleNumDownAndKeyword(String keyword);
+    public List<CommodityFurniture> selectFurnitureOrderBySaleNumUpAndKeyword(String keyword);
+
+    public List<CommodityFurniture> selectByFurnitureOrderByScoreDownByKeyword(String keyword);
+    public List<CommodityFurniture> selectByFurnitureOrderByScoreUpByKeyword(String keyword);
+
+    public List<CommodityFurniture> selectByFurnitureOrderByPriceDownByKeyword(String keyword);
+    public List<CommodityFurniture> selectByFurnitureOrderByPriceUpByKeyword(String keyword);
+
+
+
+    public List<String> selectFurnitureType();
+    public List<String> selectFurnitureStyle();
+    public List<String> selectFurnitureBrand();
+
+
+}
